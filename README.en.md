@@ -9,6 +9,7 @@
 </a>
 <img src="https://img.shields.io/badge/Go-1.18-darkturquoise">
 <img src="https://img.shields.io/badge/Gin-1.8.0-dodgerblue">
+<img src="https://img.shields.io/badge/MongoDB Go Driver-1.9.1-seagreen">
 </p>
 
 ### 📖 Language
