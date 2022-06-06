@@ -5,6 +5,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 	"note-gin/src/model"
 )
 
@@ -13,7 +14,7 @@ func Connection(c *gin.Context) *mongo.Collection {
 	// 连接 MongoDB 客户端
 	client, err := mongo.Connect(c, options.Client().ApplyURI("mongodb://root:123456@127.0.0.1:27017/"))
 	if err != nil {
-		err.Error()
+		log.Println(err)
 	}
 
 	// 连接 note 数据库, linux_command 表
@@ -23,21 +24,46 @@ func Connection(c *gin.Context) *mongo.Collection {
 }
 
 // One 按命令名称查询一条命令
-func One(commandName string, c *gin.Context) model.Command {
+func One(c *gin.Context, commandName string) model.Command {
 	// 获取数据库连接
 	collection := Connection(c)
 
-	// 按命令名称查询数据
+	// 按 Linux 命令名称查询数据
 	result := collection.FindOne(c, bson.M{
 		"command": commandName,
 	})
 
-	// 转换为 Command 结构体
+	// 转换为结构体
 	command := model.Command{}
 	err := result.Decode(&command)
 	if err != nil {
-		err.Error()
+		log.Println(err)
 	}
 
 	return command
+}
+
+func List(c *gin.Context) []model.Command {
+	// 获取数据库连接
+	collection := Connection(c)
+
+	// 查询所有 Linux 命令
+	cursor, err := collection.Find(c, bson.D{})
+	if err != nil {
+		log.Println(err)
+	}
+
+	// 转换为结构体数组
+	var commandList []model.Command
+	// 返回值 cursor 相当于一个指针, 需要 Next() 遍历一个一个获取数据
+	for cursor.Next(c) {
+		command := model.Command{}
+		cursor.Decode(&command)
+		if err != nil {
+			log.Println(err)
+		}
+		commandList = append(commandList, command)
+	}
+
+	return commandList
 }

@@ -5,15 +5,16 @@ import (
 	"note-gin/src/controller"
 )
 
-// Route 自定义路由
+// Route 自定义路由规则
 func Route() *gin.Engine {
-	// 使用 Gin 框架默认路由
+	// 使用 Gin 默认路由
 	r := gin.Default()
 
-	// 添加命令相关路由组
+	// 添加 Linux 命令相关路由组
 	commandGroup := r.Group("/note/command")
-	// 添加路由规则
+	// 添加 Linux 命令相关路由规则
 	commandGroup.GET("/one/:commandName", controller.One)
+	commandGroup.GET("/list", controller.List)
 
 	return r
 }
