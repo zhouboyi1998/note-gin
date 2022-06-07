@@ -15,6 +15,7 @@ func Route() *gin.Engine {
 	// 添加 Linux 命令相关路由规则
 	commandGroup.GET("/one/:commandName", controller.One)
 	commandGroup.GET("/list", controller.List)
+	commandGroup.GET("/list-name", controller.ListName)
 
 	return r
 }

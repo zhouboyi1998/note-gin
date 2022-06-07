@@ -43,6 +43,7 @@ func One(c *gin.Context, commandName string) model.Command {
 	return command
 }
 
+// List 查询所有 Linux 命令
 func List(c *gin.Context) []model.Command {
 	// 获取数据库连接
 	collection := Connection(c)
@@ -66,4 +67,30 @@ func List(c *gin.Context) []model.Command {
 	}
 
 	return commandList
+}
+
+// ListName 查询所有 Linux 命令的名称
+func ListName(c *gin.Context) []string {
+	// 获取数据库连接
+	collection := Connection(c)
+
+	// 查询所有 Linux 命令
+	cursor, err := collection.Find(c, bson.D{})
+	if err != nil {
+		log.Println(err)
+	}
+
+	// 转换为结构体数组
+	var nameList []string
+	// 返回值 cursor 相当于一个指针, 需要 Next() 遍历一个一个获取数据
+	for cursor.Next(c) {
+		command := model.Command{}
+		cursor.Decode(&command)
+		if err != nil {
+			log.Println(err)
+		}
+		nameList = append(nameList, command.Command)
+	}
+
+	return nameList
 }

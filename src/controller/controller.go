@@ -11,7 +11,14 @@ func One(c *gin.Context) {
 	c.JSON(200, command)
 }
 
+// List 查询所有 Linux 命令
 func List(c *gin.Context) {
 	commandList := mongo.List(c)
 	c.JSON(200, commandList)
+}
+
+// ListName 查询所有 Linux 命令的名称
+func ListName(c *gin.Context) {
+	nameList := mongo.ListName(c)
+	c.JSON(200, nameList)
 }
