@@ -7,5 +7,8 @@ type Command struct {
 	Id      primitive.ObjectID `bson:"_id"`
 	Command string             `bson:"command"`
 	Usage   string             `bson:"usage"`
-	Params  []Param            `bson:"params"`
+	Params  []struct {
+		Param       string `bson:"param"`
+		Description string `bson:"description"`
+	} `bson:"params"`
 }

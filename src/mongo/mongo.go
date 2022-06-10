@@ -12,7 +12,7 @@ import (
 // Connection 连接 MongoDB
 func Connection(c *gin.Context) *mongo.Collection {
 	// 连接 MongoDB 客户端
-	client, err := mongo.Connect(c, options.Client().ApplyURI("mongodb://root:123456@host.docker.internal:27017/"))
+	client, err := mongo.Connect(c, options.Client().ApplyURI("mongodb://root:123456@127.0.0.1:27017/"))
 	if err != nil {
 		log.Println(err)
 	}
