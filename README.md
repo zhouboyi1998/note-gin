@@ -21,9 +21,28 @@
 * 2：配置 `Environment`
     * `GOPROXY=https://goproxy.cn,direct`
     * `GOFLAGS=-buildvcs=false`
-
----
+    * `ENVCONFIG=dev`
 
 #### 安装依赖
 
 * 项目根路径下运行命令：`go mod tidy`
+
+### 🐳 Docker
+
+* 项目根目录下运行以下命令
+
+#### Docker 构建
+
+```
+docker build -t note-gin .
+```
+
+#### Docker 运行
+
+```
+docker run -d -p 18091:18091 --name note-gin note-gin
+```
+
+### 📜 开源协议
+
+[MIT License](https://opensource.org/licenses/MIT) Copyright (c) 2022 周博义

@@ -8,6 +8,7 @@ COPY . /go/note-gin
 RUN go env -w GO111MODULE=on
 RUN go env -w GOPROXY=https://goproxy.cn,direct
 RUN go env -w GOFLAGS=-buildvcs=false
+ENV ENVCONFIG docker
 
 # 构建项目
 RUN go mod tidy

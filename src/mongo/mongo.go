@@ -6,19 +6,22 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"note-gin/src/conf"
 	"note-gin/src/model"
 )
 
 // Connection 连接 MongoDB
 func Connection(c *gin.Context) *mongo.Collection {
+	// 从配置文件中读取连接配置
+	uri := "mongodb://" + conf.Config.Mongo.Username + ":" + conf.Config.Mongo.Password + "@" + conf.Config.Mongo.Host + ":" + conf.Config.Mongo.Port + "/"
 	// 连接 MongoDB 客户端
-	client, err := mongo.Connect(c, options.Client().ApplyURI("mongodb://root:123456@127.0.0.1:27017/"))
+	client, err := mongo.Connect(c, options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Println(err)
 	}
 
-	// 连接 note 数据库, linux_command 表
-	collection := client.Database("note").Collection("linux_command")
+	// 连接配置文件指定的数据库和文档集合
+	collection := client.Database(conf.Config.Mongo.Database).Collection(conf.Config.Mongo.Collection)
 
 	return collection
 }

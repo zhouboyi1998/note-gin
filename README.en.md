@@ -17,13 +17,31 @@
 
 #### Project configuration
 
-* 1：配置 `Global GOPATH` & `Project GOPATH`
-* 2：配置 `Environment`
+* 1：Configure `Global GOPATH` & `Project GOPATH`
+* 2：Configure `Environment`
     * `GOPROXY=https://goproxy.cn,direct`
     * `GOFLAGS=-buildvcs=false`
-
----
 
 #### Install dependencies
 
 * Run the command in the root path of the project：`go mod tidy`
+
+### 🐳 Docker
+
+* Run the command in the project root directory
+
+#### Docker Build
+
+```
+docker build -t note-gin .
+```
+
+#### Docker Run
+
+```
+docker run -d -p 18091:18091 --name note-gin note-gin
+```
+
+### 📜 Licence
+
+[MIT License](https://opensource.org/licenses/MIT) Copyright (c) 2022 周博义
