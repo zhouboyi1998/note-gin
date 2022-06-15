@@ -16,6 +16,7 @@ func Route() *gin.Engine {
 	commandGroup.GET("/one/:commandName", controller.One)
 	commandGroup.GET("/list", controller.List)
 	commandGroup.GET("/list-name", controller.ListName)
+	commandGroup.POST("/insert-one", controller.InsertOne)
 
 	return r
 }

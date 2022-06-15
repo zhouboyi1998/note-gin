@@ -22,3 +22,12 @@ func ListName(c *gin.Context) {
 	nameList := mongo.ListName(c)
 	c.JSON(200, nameList)
 }
+
+// InsertOne 插入单条 Linux 命令
+func InsertOne(c *gin.Context) {
+	result, commandName := mongo.InsertOne(c)
+	c.JSON(200, gin.H{
+		"Id":      result,
+		"Command": commandName,
+	})
+}

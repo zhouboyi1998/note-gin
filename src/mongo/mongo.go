@@ -3,6 +3,7 @@ package mongo
 import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -36,7 +37,7 @@ func One(c *gin.Context, commandName string) model.Command {
 		"command": commandName,
 	})
 
-	// 转换为结构体
+	// 空的结构体对象
 	command := model.Command{}
 	err := result.Decode(&command)
 	if err != nil {
@@ -57,7 +58,7 @@ func List(c *gin.Context) []model.Command {
 		log.Println(err)
 	}
 
-	// 转换为结构体数组
+	// 结构体数组
 	var commandList []model.Command
 	// 返回值 cursor 相当于一个指针, 需要 Next() 遍历一个一个获取数据
 	for cursor.Next(c) {
@@ -83,7 +84,7 @@ func ListName(c *gin.Context) []string {
 		log.Println(err)
 	}
 
-	// 转换为结构体数组
+	// 字符串数组
 	var nameList []string
 	// 返回值 cursor 相当于一个指针, 需要 Next() 遍历一个一个获取数据
 	for cursor.Next(c) {
@@ -96,4 +97,28 @@ func ListName(c *gin.Context) []string {
 	}
 
 	return nameList
+}
+
+// InsertOne 插入单条 Linux 命令
+func InsertOne(c *gin.Context) (*mongo.InsertOneResult, string) {
+	// 获取数据库连接
+	collection := Connection(c)
+
+	// 空的结构体对象
+	command := model.Command{}
+	// 将请求体参数赋值到结构体对象上
+	errBind := c.ShouldBind(&command)
+	if errBind != nil {
+		log.Println(errBind)
+	}
+	// 生成 ObjectID
+	command.Id = primitive.NewObjectID()
+
+	// 插入单条 Linux 命令
+	result, err := collection.InsertOne(c, command)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return result, command.Command
 }
