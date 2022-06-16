@@ -124,7 +124,7 @@ func InsertOne(c *gin.Context) (*mongo.InsertOneResult, string) {
 	return result, command.Command
 }
 
-// UpdateOne 根据 ObjectId 更新单条 Linux 命令
+// UpdateOne 更新单条 Linux 命令
 func UpdateOne(c *gin.Context) *mongo.UpdateResult {
 	// 获取数据库连接
 	collection := Connection(c)
@@ -144,4 +144,24 @@ func UpdateOne(c *gin.Context) *mongo.UpdateResult {
 	}
 
 	return result
+}
+
+// DeleteOne 删除单条 Linux 命令
+func DeleteOne(c *gin.Context, commandId string) (*mongo.DeleteResult, primitive.ObjectID) {
+	// 获取数据库连接
+	collection := Connection(c)
+
+	// 字符串 Id 转换为 ObjectId
+	objectId, errHex := primitive.ObjectIDFromHex(commandId)
+	if errHex != nil {
+		log.Println(errHex)
+	}
+
+	// 根据 ObjectId 删除单条 Linux 命令
+	result, err := collection.DeleteOne(c, bson.M{"_id": objectId})
+	if err != nil {
+		log.Println(err)
+	}
+
+	return result, objectId
 }

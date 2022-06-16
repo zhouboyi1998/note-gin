@@ -7,8 +7,8 @@ import (
 
 // One 按 Linux 命令名称查询一条命令
 func One(c *gin.Context) {
-	command := mongo.One(c, c.Param("commandName"))
-	c.JSON(200, command)
+	commandName := mongo.One(c, c.Param("commandName"))
+	c.JSON(200, commandName)
 }
 
 // List 查询所有 Linux 命令
@@ -27,13 +27,22 @@ func ListName(c *gin.Context) {
 func InsertOne(c *gin.Context) {
 	result, commandName := mongo.InsertOne(c)
 	c.JSON(200, gin.H{
-		"Id":      result,
-		"Command": commandName,
+		"result":  result,
+		"command": commandName,
 	})
 }
 
-// UpdateOne 根据 ObjectId 更新单条 Linux 命令
+// UpdateOne 更新单条 Linux 命令
 func UpdateOne(c *gin.Context) {
 	result := mongo.UpdateOne(c)
 	c.JSON(200, result)
+}
+
+// DeleteOne 删除单条 Linux 命令
+func DeleteOne(c *gin.Context) {
+	result, objectId := mongo.DeleteOne(c, c.Param("commandId"))
+	c.JSON(200, gin.H{
+		"result": result,
+		"_id":    objectId,
+	})
 }

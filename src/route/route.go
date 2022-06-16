@@ -18,6 +18,7 @@ func Route() *gin.Engine {
 	commandGroup.GET("/list/name", controller.ListName)
 	commandGroup.POST("/insert", controller.InsertOne)
 	commandGroup.PUT("/update", controller.UpdateOne)
+	commandGroup.DELETE("/delete/:commandId", controller.DeleteOne)
 
 	return r
 }
