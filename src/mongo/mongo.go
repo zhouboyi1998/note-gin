@@ -15,7 +15,8 @@ import (
 func Connection(c *gin.Context) *mongo.Collection {
 	// 从配置文件中读取连接配置
 	uri := "mongodb://" + conf.Config.Mongo.Username + ":" + conf.Config.Mongo.Password + "@" + conf.Config.Mongo.Host + ":" + conf.Config.Mongo.Port + "/"
-	// 连接 MongoDB 客户端
+
+	// 连接 MongoDB 数据库
 	client, err := mongo.Connect(c, options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Println(err)
@@ -38,7 +39,7 @@ func One(c *gin.Context, commandName string) model.Command {
 	})
 
 	// 结构体对象
-	command := model.Command{}
+	var command model.Command
 	err := result.Decode(&command)
 	if err != nil {
 		log.Println(err)
@@ -59,7 +60,7 @@ func List(c *gin.Context) []model.Command {
 	}
 
 	// 结构体数组
-	var commandList []model.Command
+	var commandArray []model.Command
 	// 返回值 cursor 相当于一个指针, 需要 Next() 遍历一个一个获取数据
 	for cursor.Next(c) {
 		command := model.Command{}
@@ -67,10 +68,10 @@ func List(c *gin.Context) []model.Command {
 		if err != nil {
 			log.Println(err)
 		}
-		commandList = append(commandList, command)
+		commandArray = append(commandArray, command)
 	}
 
-	return commandList
+	return commandArray
 }
 
 // ListName 查询所有 Linux 命令的名称
@@ -85,7 +86,7 @@ func ListName(c *gin.Context) []string {
 	}
 
 	// 字符串数组
-	var nameList []string
+	var nameArray []string
 	// 返回值 cursor 相当于一个指针, 需要 Next() 遍历一个一个获取数据
 	for cursor.Next(c) {
 		command := model.Command{}
@@ -93,10 +94,10 @@ func ListName(c *gin.Context) []string {
 		if err != nil {
 			log.Println(err)
 		}
-		nameList = append(nameList, command.Command)
+		nameArray = append(nameArray, command.Command)
 	}
 
-	return nameList
+	return nameArray
 }
 
 // InsertOne 插入单条 Linux 命令
@@ -105,7 +106,7 @@ func InsertOne(c *gin.Context) (*mongo.InsertOneResult, string) {
 	collection := Connection(c)
 
 	// 结构体对象
-	command := model.Command{}
+	var command model.Command
 	// 将请求体参数赋值到结构体对象上
 	errBind := c.ShouldBind(&command)
 	if errBind != nil {
@@ -123,22 +124,21 @@ func InsertOne(c *gin.Context) (*mongo.InsertOneResult, string) {
 	return result, command.Command
 }
 
-// InsertMany 插入多条 Linux 命令
-func InsertMany(c *gin.Context) *mongo.InsertManyResult {
+// UpdateOne 根据 ObjectId 更新单条 Linux 命令
+func UpdateOne(c *gin.Context) *mongo.UpdateResult {
 	// 获取数据库连接
 	collection := Connection(c)
 
-	// interface 数组
-	var commandList []interface{}
-
+	// 结构体对象
+	var command model.Command
 	// 将请求体参数赋值到结构体对象上
-	errBind := c.ShouldBind(&commandList)
+	errBind := c.ShouldBind(&command)
 	if errBind != nil {
 		log.Println(errBind)
 	}
 
-	// 插入多条 Linux 命令
-	result, err := collection.InsertMany(c, commandList)
+	// 根据 ObjectId 更新单条 Linux 命令
+	result, err := collection.UpdateOne(c, bson.M{"_id": command.Id}, bson.M{"$set": command})
 	if err != nil {
 		log.Println(err)
 	}

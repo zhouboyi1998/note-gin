@@ -13,14 +13,14 @@ func One(c *gin.Context) {
 
 // List 查询所有 Linux 命令
 func List(c *gin.Context) {
-	commandList := mongo.List(c)
-	c.JSON(200, commandList)
+	commandArray := mongo.List(c)
+	c.JSON(200, commandArray)
 }
 
 // ListName 查询所有 Linux 命令的名称
 func ListName(c *gin.Context) {
-	nameList := mongo.ListName(c)
-	c.JSON(200, nameList)
+	nameArray := mongo.ListName(c)
+	c.JSON(200, nameArray)
 }
 
 // InsertOne 插入单条 Linux 命令
@@ -32,8 +32,8 @@ func InsertOne(c *gin.Context) {
 	})
 }
 
-// InsertMany 插入多条 Linux 命令
-func InsertMany(c *gin.Context) {
-	result := mongo.InsertMany(c)
+// UpdateOne 根据 ObjectId 更新单条 Linux 命令
+func UpdateOne(c *gin.Context) {
+	result := mongo.UpdateOne(c)
 	c.JSON(200, result)
 }
