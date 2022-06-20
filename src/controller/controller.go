@@ -32,6 +32,12 @@ func InsertOne(c *gin.Context) {
 	})
 }
 
+// InsertMany 插入多条 Linux 命令
+func InsertMany(c *gin.Context) {
+	result := mongo.InsertMany(c)
+	c.JSON(200, result)
+}
+
 // UpdateOne 更新单条 Linux 命令
 func UpdateOne(c *gin.Context) {
 	result := mongo.UpdateOne(c)

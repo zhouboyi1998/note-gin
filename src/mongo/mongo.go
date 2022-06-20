@@ -40,6 +40,7 @@ func One(c *gin.Context, commandName string) model.Command {
 
 	// 结构体对象
 	var command model.Command
+	// 将查询结果赋值给结构体对象
 	err := result.Decode(&command)
 	if err != nil {
 		log.Println(err)
@@ -122,6 +123,28 @@ func InsertOne(c *gin.Context) (*mongo.InsertOneResult, string) {
 	}
 
 	return result, command.Command
+}
+
+// InsertMany 插入多条 Linux 命令
+func InsertMany(c *gin.Context) *mongo.InsertManyResult {
+	// 获取数据库连接
+	collection := Connection(c)
+
+	// interface 数组
+	var commandList []interface{}
+	// 将请求体参数赋值到 interface 数组上
+	errBind := c.ShouldBind(&commandList)
+	if errBind != nil {
+		log.Println(errBind)
+	}
+
+	// 插入多条 Linux 命令
+	result, err := collection.InsertMany(c, commandList)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return result
 }
 
 // UpdateOne 更新单条 Linux 命令
