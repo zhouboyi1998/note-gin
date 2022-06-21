@@ -4,11 +4,11 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 
 // Command Linux 命令结构体
 type Command struct {
-	Id      primitive.ObjectID `bson:"_id"`
-	Command string             `json:"command"`
-	Usage   string             `json:"usage"`
+	Id      primitive.ObjectID `bson:"_id" json:"id"`
+	Command string             `bson:"command" json:"command"`
+	Usage   string             `bson:"usage" json:"usage"`
 	Params  []struct {
-		Param       string `json:"param"`
-		Description string `json:"description"`
-	} `json:"params"`
+		Param       string `bson:"param" json:"param"`
+		Description string `bson:"description" json:"description"`
+	} `bson:"params" json:"params"`
 }
