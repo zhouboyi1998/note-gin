@@ -5,7 +5,7 @@ import (
 	"note-gin/src/mongo"
 )
 
-// One 按 Linux 命令名称查询一条命令
+// One 按 Linux 命令名称查询单条 Linux 命令
 func One(c *gin.Context) {
 	commandName := mongo.One(c, c.Param("commandName"))
 	c.JSON(200, commandName)

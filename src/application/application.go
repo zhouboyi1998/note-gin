@@ -1,4 +1,4 @@
-package conf
+package application
 
 import (
 	"gopkg.in/yaml.v2"
@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-type Configuration struct {
+type Application struct {
 	Server struct {
 		Host string
 		Port string
@@ -22,17 +22,17 @@ type Configuration struct {
 	}
 }
 
-var Config = &Configuration{}
+var App = &Application{}
 
 func init() {
 	// os.Getenv() 获取环境变量, ioutil.ReadFile() 读取对应的 yaml 配置文件
-	file, err := ioutil.ReadFile("src/conf/" + os.Getenv("ENVCONFIG") + ".yaml")
+	file, err := ioutil.ReadFile("src/application/application-" + os.Getenv("ENVCONFIG") + ".yaml")
 	if err != nil {
 		log.Println(err)
 	}
 
-	// yaml.Unmarshal() 将 .yaml 配置文件中的配置解析到 Configuration 类型的变量中
-	err = yaml.Unmarshal(file, Config)
+	// yaml.Unmarshal() 将 .yaml 配置文件中的配置解析到 Application 类型的变量中
+	err = yaml.Unmarshal(file, App)
 	if err != nil {
 		log.Println(err)
 	}
