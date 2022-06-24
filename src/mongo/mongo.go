@@ -7,14 +7,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
-	"note-gin/src/conf"
+	"note-gin/src/application"
 	"note-gin/src/model"
 )
 
-// Connection 连接 MongoDB
-func Connection(c *gin.Context) *mongo.Collection {
+// Collection 连接 MongoDB, 连接指定的文档集合
+func Collection(c *gin.Context) *mongo.Collection {
 	// 从配置文件中读取连接配置
-	uri := "mongodb://" + conf.Config.Mongo.Username + ":" + conf.Config.Mongo.Password + "@" + conf.Config.Mongo.Host + ":" + conf.Config.Mongo.Port + "/"
+	uri := "mongodb://" + application.App.Mongo.Username + ":" + application.App.Mongo.Password + "@" + application.App.Mongo.Host + ":" + application.App.Mongo.Port + "/"
 
 	// 连接 MongoDB 数据库
 	client, err := mongo.Connect(c, options.Client().ApplyURI(uri))
@@ -23,15 +23,15 @@ func Connection(c *gin.Context) *mongo.Collection {
 	}
 
 	// 连接配置文件指定的数据库和文档集合
-	collection := client.Database(conf.Config.Mongo.Database).Collection(conf.Config.Mongo.Collection)
+	collection := client.Database(application.App.Mongo.Database).Collection(application.App.Mongo.Collection)
 
 	return collection
 }
 
-// One 按命令名称查询一条命令
+// One 按 Linux 命令名称查询单条 Linux 命令
 func One(c *gin.Context, commandName string) model.Command {
-	// 获取数据库连接
-	collection := Connection(c)
+	// 获取集合连接
+	collection := Collection(c)
 
 	// 按 Linux 命令名称查询数据
 	result := collection.FindOne(c, bson.M{
@@ -51,8 +51,8 @@ func One(c *gin.Context, commandName string) model.Command {
 
 // List 查询所有 Linux 命令
 func List(c *gin.Context) []model.Command {
-	// 获取数据库连接
-	collection := Connection(c)
+	// 获取集合连接
+	collection := Collection(c)
 
 	// 查询所有 Linux 命令
 	cursor, err := collection.Find(c, bson.D{})
@@ -77,8 +77,8 @@ func List(c *gin.Context) []model.Command {
 
 // ListName 查询所有 Linux 命令的名称
 func ListName(c *gin.Context) []string {
-	// 获取数据库连接
-	collection := Connection(c)
+	// 获取集合连接
+	collection := Collection(c)
 
 	// 查询所有 Linux 命令
 	cursor, err := collection.Find(c, bson.D{})
@@ -103,8 +103,8 @@ func ListName(c *gin.Context) []string {
 
 // InsertOne 插入单条 Linux 命令
 func InsertOne(c *gin.Context) (*mongo.InsertOneResult, string) {
-	// 获取数据库连接
-	collection := Connection(c)
+	// 获取集合连接
+	collection := Collection(c)
 
 	// 结构体对象
 	var command model.Command
@@ -127,8 +127,8 @@ func InsertOne(c *gin.Context) (*mongo.InsertOneResult, string) {
 
 // InsertMany 插入多条 Linux 命令
 func InsertMany(c *gin.Context) *mongo.InsertManyResult {
-	// 获取数据库连接
-	collection := Connection(c)
+	// 获取集合连接
+	collection := Collection(c)
 
 	// interface 数组
 	var commandList []interface{}
@@ -149,8 +149,8 @@ func InsertMany(c *gin.Context) *mongo.InsertManyResult {
 
 // UpdateOne 更新单条 Linux 命令
 func UpdateOne(c *gin.Context) *mongo.UpdateResult {
-	// 获取数据库连接
-	collection := Connection(c)
+	// 获取集合连接
+	collection := Collection(c)
 
 	// 结构体对象
 	var command model.Command
@@ -171,8 +171,8 @@ func UpdateOne(c *gin.Context) *mongo.UpdateResult {
 
 // DeleteOne 删除单条 Linux 命令
 func DeleteOne(c *gin.Context, commandId string) (*mongo.DeleteResult, primitive.ObjectID) {
-	// 获取数据库连接
-	collection := Connection(c)
+	// 获取集合连接
+	collection := Collection(c)
 
 	// 字符串 Id 转换为 ObjectId
 	objectId, errHex := primitive.ObjectIDFromHex(commandId)
