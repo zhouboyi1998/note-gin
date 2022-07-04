@@ -30,6 +30,16 @@
 
 * Run the command in the project root directory
 
+#### Compile the Golang code to Linux executable file
+
+```
+set GOOS=linux
+
+set GOARCH=amd64
+
+go build main.go
+```
+
 #### Docker Build
 
 ```
