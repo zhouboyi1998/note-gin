@@ -31,6 +31,16 @@
 
 * 项目根目录下运行以下命令
 
+#### Go 代码编译成 Linux 可执行文件
+
+```
+set GOOS=linux
+
+set GOARCH=amd64
+
+go build main.go
+```
+
 #### Docker 构建
 
 ```
