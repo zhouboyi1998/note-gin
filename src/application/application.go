@@ -26,7 +26,7 @@ var App = &Application{}
 
 func init() {
 	// os.Getenv() 获取环境变量, ioutil.ReadFile() 读取对应的 yaml 配置文件
-	file, err := ioutil.ReadFile("./src/application/application-" + os.Getenv("ENVCONFIG") + ".yaml")
+	file, err := ioutil.ReadFile("./application-" + os.Getenv("ENVCONFIG") + ".yaml")
 	if err != nil {
 		log.Println(err)
 	}
