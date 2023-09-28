@@ -5,10 +5,18 @@ import (
 	"note-gin/src/mongo"
 )
 
-// One 按 Linux 命令名称查询单条 Linux 命令
+// One 按 ObjectId 查询单条 Linux 命令
 func One(c *gin.Context) {
-	commandName := mongo.One(c, c.Param("commandName"))
-	c.JSON(200, commandName)
+	commandId := c.Param("commandId")
+	command := mongo.One(c, commandId)
+	c.JSON(200, command)
+}
+
+// OneByName 按 Linux 命令名称查询单条 Linux 命令
+func OneByName(c *gin.Context) {
+	commandName := c.Param("commandName")
+	command := mongo.OneByName(c, commandName)
+	c.JSON(200, command)
 }
 
 // List 查询所有 Linux 命令
@@ -17,9 +25,9 @@ func List(c *gin.Context) {
 	c.JSON(200, commandArray)
 }
 
-// ListName 查询所有 Linux 命令的名称
-func ListName(c *gin.Context) {
-	nameArray := mongo.ListName(c)
+// ListByName 查询所有 Linux 命令的名称
+func ListByName(c *gin.Context) {
+	nameArray := mongo.ListByName(c)
 	c.JSON(200, nameArray)
 }
 
@@ -46,7 +54,8 @@ func UpdateOne(c *gin.Context) {
 
 // DeleteOne 删除单条 Linux 命令
 func DeleteOne(c *gin.Context) {
-	result, objectId := mongo.DeleteOne(c, c.Param("commandId"))
+	commandId := c.Param("commandId")
+	result, objectId := mongo.DeleteOne(c, commandId)
 	c.JSON(200, gin.H{
 		"result": result,
 		"_id":    objectId,
