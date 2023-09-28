@@ -52,3 +52,12 @@ func DeleteOne(c *gin.Context) {
 		"_id":    objectId,
 	})
 }
+
+// DeleteMany 删除多条 Linux 命令
+func DeleteMany(c *gin.Context) {
+	result, objectIds := mongo.DeleteMany(c)
+	c.JSON(200, gin.H{
+		"result": result,
+		"_ids":   objectIds,
+	})
+}
