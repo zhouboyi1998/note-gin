@@ -28,8 +28,35 @@ func Collection(c *gin.Context) *mongo.Collection {
 	return collection
 }
 
-// One 按 Linux 命令名称查询单条 Linux 命令
-func One(c *gin.Context, commandName string) model.Command {
+// One 按 ObjectId 查询单条 Linux 命令
+func One(c *gin.Context, commandId string) model.Command {
+	// 获取集合连接
+	collection := Collection(c)
+
+	// 字符串 Id 转换为 ObjectId
+	objectId, errHex := primitive.ObjectIDFromHex(commandId)
+	if errHex != nil {
+		log.Println(errHex)
+	}
+
+	// 按 ObjectId 查询数据
+	result := collection.FindOne(c, bson.M{
+		"_id": objectId,
+	})
+
+	// 结构体对象
+	var command model.Command
+	// 将查询结果赋值给结构体对象
+	err := result.Decode(&command)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return command
+}
+
+// OneByName 按 Linux 命令名称查询单条 Linux 命令
+func OneByName(c *gin.Context, commandName string) model.Command {
 	// 获取集合连接
 	collection := Collection(c)
 
@@ -75,8 +102,8 @@ func List(c *gin.Context) []model.Command {
 	return commandArray
 }
 
-// ListName 查询所有 Linux 命令的名称
-func ListName(c *gin.Context) []string {
+// ListByName 查询所有 Linux 命令的名称
+func ListByName(c *gin.Context) []string {
 	// 获取集合连接
 	collection := Collection(c)
 
