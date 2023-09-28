@@ -24,14 +24,21 @@
 * 2：Configure `Environment`
     * `GOPROXY=https://goproxy.cn,direct`
     * `GOFLAGS=-buildvcs=false`
+    * `ENVCONFIG=dev`
 
 #### Install dependencies
 
-* Run the command in the root path of the project：`go mod tidy`
+```
+go mod tidy
+```
+
+#### compile to an executable file
+
+```
+go build main.go
+```
 
 ### 🐳 Docker
-
-* Run the command in the project root directory
 
 #### Compile the Golang code to Linux executable file
 

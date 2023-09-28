@@ -20,6 +20,7 @@ func Route() *gin.Engine {
 	g.POST("/insert/many", controller.InsertMany)
 	g.PUT("/update", controller.UpdateOne)
 	g.DELETE("/delete/:commandId", controller.DeleteOne)
+	g.DELETE("/delete/many", controller.DeleteMany)
 
 	return r
 }

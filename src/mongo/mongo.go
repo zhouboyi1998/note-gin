@@ -65,7 +65,7 @@ func List(c *gin.Context) []model.Command {
 	// 返回值 cursor 相当于一个指针, 需要 Next() 遍历一个一个获取数据
 	for cursor.Next(c) {
 		command := model.Command{}
-		cursor.Decode(&command)
+		err := cursor.Decode(&command)
 		if err != nil {
 			log.Println(err)
 		}
@@ -91,7 +91,7 @@ func ListName(c *gin.Context) []string {
 	// 返回值 cursor 相当于一个指针, 需要 Next() 遍历一个一个获取数据
 	for cursor.Next(c) {
 		command := model.Command{}
-		cursor.Decode(&command)
+		err := cursor.Decode(&command)
 		if err != nil {
 			log.Println(err)
 		}
@@ -187,4 +187,37 @@ func DeleteOne(c *gin.Context, commandId string) (*mongo.DeleteResult, primitive
 	}
 
 	return result, objectId
+}
+
+// DeleteMany 删除多条 Linux 命令
+func DeleteMany(c *gin.Context) (*mongo.DeleteResult, []primitive.ObjectID) {
+	// 获取集合连接
+	collection := Collection(c)
+
+	// 字符串 Id 数组
+	var commandIds []string
+	// 将请求体参数赋值到字符串 Id 数组上
+	errBind := c.ShouldBind(&commandIds)
+	if errBind != nil {
+		log.Println(errBind)
+	}
+
+	// ObjectId 数组
+	var objectIds []primitive.ObjectID
+	// 遍历字符串 Id 数组, 转换为 ObjectId 数组
+	for _, commandId := range commandIds {
+		objectId, errHex := primitive.ObjectIDFromHex(commandId)
+		if errHex != nil {
+			log.Println(errHex)
+		}
+		objectIds = append(objectIds, objectId)
+	}
+
+	// 根据 ObjectId 数组删除多条 Linux 命令
+	result, err := collection.DeleteMany(c, bson.M{"_id": bson.M{"$in": objectIds}})
+	if err != nil {
+		log.Println(err)
+	}
+
+	return result, objectIds
 }
