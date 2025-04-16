@@ -46,16 +46,6 @@ go build main.go
 
 ### 🐳 Docker
 
-#### Compile the Golang code to Linux executable file
-
-```
-set GOOS=linux
-
-set GOARCH=amd64
-
-go build main.go
-```
-
 #### Docker Build
 
 ```
